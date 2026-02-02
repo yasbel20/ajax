@@ -3,12 +3,9 @@ $(document).ready(function() {
     console.log('Bolsi website loaded with authentication');
 
     // Global variables
-    let currentUser = null;
+    window.currentUser = null;
     let cart = [];
     let cartCount = 0;
-
-    // Check if user is logged in on page load
-    checkLoginStatus();
 
     // ===== AUTHENTICATION FUNCTIONS =====
 
@@ -19,11 +16,11 @@ $(document).ready(function() {
             dataType: 'json',
             success: function(response) {
                 if (response.logged_in) {
-                    currentUser = response.user;
+                    window.currentUser = response.user;
                     updateUIForLoggedInUser();
                     loadCart();
                 } else {
-                    currentUser = null;
+                    window.currentUser = null;
                     updateUIForGuest();
                 }
             },
@@ -43,7 +40,7 @@ $(document).ready(function() {
                 <path d="M4 20c0-4 3.5-7 8-7s8 3 8 7"/>
             </svg>
         `);
-        $accountBtn.attr('title', currentUser.name || currentUser.email);
+        $accountBtn.attr('title', window.currentUser.name || window.currentUser.email);
         
         // Show logout option when clicking account
         $accountBtn.off('click').on('click', function() {
@@ -59,6 +56,7 @@ $(document).ready(function() {
                 <path d="M4 20c0-4 3.5-7 8-7s8 3 8 7" stroke="currentColor" fill="none" stroke-width="1.5"/>
             </svg>
         `);
+        $accountBtn.attr('title', 'Iniciar sesión');
         $accountBtn.off('click').on('click', function() {
             openLoginModal();
         });
@@ -73,8 +71,8 @@ $(document).ready(function() {
         const menu = $(`
             <div id="accountMenu" class="account-dropdown">
                 <div class="account-dropdown-content">
-                    <p class="account-user-name">${currentUser.name || 'Usuario'}</p>
-                    <p class="account-user-email">${currentUser.email}</p>
+                    <p class="account-user-name">${window.currentUser.name || 'Usuario'}</p>
+                    <p class="account-user-email">${window.currentUser.email}</p>
                     <hr>
                     <button class="account-menu-item" id="myOrdersBtn">Mis Pedidos</button>
                     <button class="account-menu-item" id="myProfileBtn">Mi Perfil</button>
@@ -99,7 +97,7 @@ $(document).ready(function() {
             logout();
         });
 
-        // Close other handlers
+        // Other menu items
         $('#myOrdersBtn, #myProfileBtn').on('click', function() {
             showNotification('Función próximamente disponible');
             closeAccountMenu();
@@ -119,7 +117,7 @@ $(document).ready(function() {
             dataType: 'json',
             success: function(response) {
                 if (response.success) {
-                    currentUser = null;
+                    window.currentUser = null;
                     cart = [];
                     cartCount = 0;
                     updateCartCount(0);
@@ -160,10 +158,18 @@ $(document).ready(function() {
     });
 
     // Toggle password visibility
-    $('.toggle-password').on('click', function() {
+    $(document).on('click', '.toggle-password', function() {
         const $input = $(this).siblings('input');
         const type = $input.attr('type') === 'password' ? 'text' : 'password';
         $input.attr('type', type);
+        
+        // Cambiar icono
+        const $icon = $(this).find('svg');
+        if (type === 'text') {
+            $icon.html('<path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" stroke="currentColor" fill="none" stroke-width="1.5"/>');
+        } else {
+            $icon.html('<path d="M12 5C5.636 5 2 12 2 12s3.636 7 10 7 10-7 10-7-3.636-7-10-7z" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/>');
+        }
     });
 
     // Login form submission
@@ -190,7 +196,7 @@ $(document).ready(function() {
             dataType: 'json',
             success: function(response) {
                 if (response.success) {
-                    currentUser = response.user;
+                    window.currentUser = response.user;
                     updateUIForLoggedInUser();
                     closeLoginModal();
                     showNotification(response.message);
@@ -198,6 +204,8 @@ $(document).ready(function() {
                     // Load cart if exists
                     if (response.cart_items && response.cart_items.length > 0) {
                         loadCartItems(response.cart_items);
+                    } else {
+                        loadCart();
                     }
                     
                     // Reset form
@@ -233,15 +241,15 @@ $(document).ready(function() {
         // Create register form
         const registerForm = $(`
             <div class="register-form-section">
-                <button class="back-to-login" id="backToLogin">← Volver</button>
+                <button type="button" class="back-to-login" id="backToLogin">← Volver al inicio de sesión</button>
                 <h3 class="register-subtitle">Crear una Cuenta</h3>
                 <form class="register-form" id="registerForm">
                     <div class="form-group">
-                        <label for="registerName">Nombre completo</label>
+                        <label for="registerName">Nombre completo *</label>
                         <input type="text" id="registerName" required>
                     </div>
                     <div class="form-group">
-                        <label for="registerEmail">Email*</label>
+                        <label for="registerEmail">Email *</label>
                         <input type="email" id="registerEmail" required>
                     </div>
                     <div class="form-group">
@@ -249,7 +257,7 @@ $(document).ready(function() {
                         <input type="tel" id="registerPhone">
                     </div>
                     <div class="form-group">
-                        <label for="registerPassword">Contraseña* (mínimo 6 caracteres)</label>
+                        <label for="registerPassword">Contraseña * (mínimo 6 caracteres)</label>
                         <div class="password-input-wrapper">
                             <input type="password" id="registerPassword" required minlength="6">
                             <button type="button" class="toggle-password">
@@ -261,10 +269,18 @@ $(document).ready(function() {
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="registerPasswordConfirm">Confirmar contraseña*</label>
-                        <input type="password" id="registerPasswordConfirm" required minlength="6">
+                        <label for="registerPasswordConfirm">Confirmar contraseña *</label>
+                        <div class="password-input-wrapper">
+                            <input type="password" id="registerPasswordConfirm" required minlength="6">
+                            <button type="button" class="toggle-password">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                    <path d="M12 5C5.636 5 2 12 2 12s3.636 7 10 7 10-7 10-7-3.636-7-10-7z" stroke="currentColor" stroke-width="1.5"/>
+                                    <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
-                    <p class="form-note">Campos obligatorios*</p>
+                    <p class="form-note">* Campos obligatorios</p>
                     <button type="submit" class="login-submit-btn">Crear cuenta</button>
                 </form>
             </div>
@@ -280,13 +296,6 @@ $(document).ready(function() {
             $registerSection.show();
         });
 
-        // Toggle password for register
-        registerForm.find('.toggle-password').on('click', function() {
-            const $input = $(this).siblings('input');
-            const type = $input.attr('type') === 'password' ? 'text' : 'password';
-            $input.attr('type', type);
-        });
-
         // Handle register form submission
         $('#registerForm').on('submit', function(e) {
             e.preventDefault();
@@ -297,13 +306,24 @@ $(document).ready(function() {
             const password = $('#registerPassword').val();
             const passwordConfirm = $('#registerPasswordConfirm').val();
 
-            if (password !== passwordConfirm) {
-                showNotification('Las contraseñas no coinciden', 'error');
+            // Validation
+            if (!name) {
+                showNotification('El nombre es obligatorio', 'error');
                 return;
             }
 
-            if (password.length < 6) {
+            if (!email) {
+                showNotification('El email es obligatorio', 'error');
+                return;
+            }
+
+            if (!password || password.length < 6) {
                 showNotification('La contraseña debe tener al menos 6 caracteres', 'error');
+                return;
+            }
+
+            if (password !== passwordConfirm) {
+                showNotification('Las contraseñas no coinciden', 'error');
                 return;
             }
 
@@ -314,24 +334,32 @@ $(document).ready(function() {
             $.ajax({
                 url: 'register.php',
                 method: 'POST',
-                data: { name, email, phone, password },
+                data: { 
+                    name: name, 
+                    email: email, 
+                    phone: phone, 
+                    password: password 
+                },
                 dataType: 'json',
                 success: function(response) {
                     if (response.success) {
-                        currentUser = response.user;
+                        window.currentUser = response.user;
                         updateUIForLoggedInUser();
                         closeLoginModal();
-                        showNotification(response.message);
-                        $('.register-form-section').remove();
-                        $loginSection.show();
-                        $divider.show();
-                        $registerSection.show();
+                        showNotification('¡Cuenta creada exitosamente!');
+                        
+                        // Reset form and show login section
                         $('#registerForm')[0].reset();
+                        $('.register-form-section').remove();
+                        $('.login-section').show();
+                        $('.login-divider').show();
+                        $('.register-section').show();
                     } else {
                         showNotification(response.message, 'error');
                     }
                 },
-                error: function() {
+                error: function(xhr, status, error) {
+                    console.error('Registration error:', error);
                     showNotification('Error de conexión. Intenta nuevamente.', 'error');
                 },
                 complete: function() {
@@ -341,7 +369,7 @@ $(document).ready(function() {
         });
     }
 
-    // ===== CART FUNCTIONS WITH DATABASE =====
+    // ===== CART FUNCTIONS =====
 
     const $cartCount = $('.cart-count');
     const $cartBtn = $('.cart-btn');
@@ -386,7 +414,7 @@ $(document).ready(function() {
 
     // Load cart from database
     function loadCart() {
-        if (!currentUser) return;
+        if (!window.currentUser) return;
 
         $.ajax({
             url: 'cart.php?action=get',
@@ -396,6 +424,9 @@ $(document).ready(function() {
                 if (response.success) {
                     loadCartItems(response.items);
                 }
+            },
+            error: function() {
+                console.log('Error loading cart');
             }
         });
     }
@@ -414,9 +445,9 @@ $(document).ready(function() {
         renderCart();
     }
 
-    // Add product to cart
+    // Add product to cart (global function)
     window.addToCart = function(product) {
-        if (!currentUser) {
+        if (!window.currentUser) {
             showNotification('Debes iniciar sesión para agregar productos al carrito', 'error');
             openLoginModal();
             return;
@@ -451,7 +482,7 @@ $(document).ready(function() {
 
     // Remove from cart
     function removeFromCart(itemId) {
-        if (!currentUser) return;
+        if (!window.currentUser) return;
 
         $.ajax({
             url: 'cart.php?action=remove',
@@ -469,7 +500,7 @@ $(document).ready(function() {
 
     // Update cart quantity
     function updateCartQuantity(itemId, quantity) {
-        if (!currentUser) return;
+        if (!window.currentUser) return;
 
         $.ajax({
             url: 'cart.php?action=update',
@@ -535,7 +566,7 @@ $(document).ready(function() {
         $('#totalAmount').text(`€${total.toFixed(2)}`);
         
         // Attach event handlers for quantity buttons
-        $('.qty-btn.minus').on('click', function() {
+        $(document).off('click', '.qty-btn.minus').on('click', '.qty-btn.minus', function() {
             const itemId = $(this).data('item-id');
             const item = cart.find(i => i.itemId === itemId);
             if (item && item.quantity > 1) {
@@ -543,7 +574,7 @@ $(document).ready(function() {
             }
         });
         
-        $('.qty-btn.plus').on('click', function() {
+        $(document).off('click', '.qty-btn.plus').on('click', '.qty-btn.plus', function() {
             const itemId = $(this).data('item-id');
             const item = cart.find(i => i.itemId === itemId);
             if (item) {
@@ -552,7 +583,7 @@ $(document).ready(function() {
         });
         
         // Attach event handlers for remove buttons
-        $('.cart-item-remove').on('click', function() {
+        $(document).off('click', '.cart-item-remove').on('click', '.cart-item-remove', function() {
             const itemId = $(this).data('item-id');
             removeFromCart(itemId);
         });
@@ -560,7 +591,7 @@ $(document).ready(function() {
 
     // Checkout button
     $('#checkoutBtn').on('click', function() {
-        if (!currentUser) {
+        if (!window.currentUser) {
             showNotification('Debes iniciar sesión para continuar', 'error');
             openLoginModal();
             return;
@@ -576,7 +607,7 @@ $(document).ready(function() {
 
     // ===== NOTIFICATION SYSTEM =====
     
-    function showNotification(message, type = 'success') {
+    window.showNotification = function(message, type = 'success') {
         // Remove existing notifications
         $('.notification').remove();
         
@@ -700,7 +731,7 @@ $(document).ready(function() {
     
     function loadProducts(category = 'todos') {
         $.ajax({
-            url: 'products_new.php',
+            url: 'data_products.php',
             method: 'GET',
             data: { category: category },
             dataType: 'json',
@@ -724,9 +755,6 @@ $(document).ready(function() {
                 <div class="product-card" data-product-id="${product.id}">
                     <div class="product-image">
                         <img src="${product.image}" alt="${product.name}">
-                        <div class="product-overlay">
-                            <button class="quick-view-btn" data-product-id="${product.id}">Vista Rápida</button>
-                        </div>
                     </div>
                     <div class="product-info">
                         <h3 class="product-name">${product.name}</h3>
@@ -753,6 +781,35 @@ $(document).ready(function() {
         e.preventDefault();
         const category = $(this).data('category');
         loadProducts(category);
+        $sideMenu.removeClass('active');
+        $('body').css('overflow', 'auto');
+        
+        // Scroll to products
+        $('html, body').animate({
+            scrollTop: $('#products').offset().top - 100
+        }, 500);
+    });
+
+    // Occasion filter
+    $('.menu-list a[data-occasion]').on('click', function(e) {
+        e.preventDefault();
+        const occasion = $(this).data('occasion');
+        
+        $.ajax({
+            url: 'data_products.php',
+            method: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    const filteredProducts = response.data.filter(product => 
+                        product.occasion === occasion
+                    );
+                    displayProducts(filteredProducts);
+                    showNotification(`Mostrando productos para: ${occasion}`);
+                }
+            }
+        });
+        
         $sideMenu.removeClass('active');
         $('body').css('overflow', 'auto');
         
@@ -796,11 +853,90 @@ $(document).ready(function() {
 
     // Wishlist button
     $('#wishlistBtn').on('click', function() {
-        if (!currentUser) {
+        if (!window.currentUser) {
             showNotification('Debes iniciar sesión para ver tu lista de deseos', 'error');
             openLoginModal();
         } else {
             showNotification('Función próximamente disponible');
         }
     });
+
+    // Contact button
+    $('#contactBtn').on('click', function() {
+        showNotification('Teléfono: +34 900 123 456');
+    });
+
+    // Forgot password link
+    $('.forgot-password').on('click', function(e) {
+        e.preventDefault();
+        showNotification('Función de recuperación de contraseña próximamente disponible');
+    });
+
+    // Alternative login link
+    $('.alternative-login a').on('click', function(e) {
+        e.preventDefault();
+        showNotification('Función de enlace de acceso único próximamente disponible');
+    });
+
+    // Check login status on page load
+    checkLoginStatus();
+
+    // Initialize other page features
+    initializePageFeatures();
 });
+
+function initializePageFeatures() {
+    // Hero button functionality
+    $('.hero-btn').on('click', function(e) {
+        e.preventDefault();
+        const target = $(this).attr('href');
+        if (target === '#products') {
+            $('html, body').animate({
+                scrollTop: $('#products').offset().top - 100
+            }, 800);
+        }
+    });
+
+    // Explore button
+    $('#exploreBtn').on('click', function() {
+        loadProducts('todos');
+        $('html, body').animate({
+            scrollTop: $('#products').offset().top - 100
+        }, 800);
+    });
+
+    // Collections button
+    $('#collectionsBtn').on('click', function() {
+        loadProducts();
+        $('html, body').animate({
+            scrollTop: $('#products').offset().top - 100
+        }, 800);
+    });
+
+    // Banner button
+    $('.banner-btn').on('click', function() {
+        loadProducts();
+        $('html, body').animate({
+            scrollTop: $('#products').offset().top - 100
+        }, 800);
+    });
+
+    // Collection links
+    $('.collection-link').on('click', function(e) {
+        e.preventDefault();
+        const category = $(this).closest('.collection-info').find('h3').text().toLowerCase();
+        if (category.includes('clásica')) {
+            loadProducts('bandolera');
+        } else if (category.includes('limitada')) {
+            loadProducts('tote');
+        }
+        $('html, body').animate({
+            scrollTop: $('#products').offset().top - 100
+        }, 800);
+    });
+
+    // Sustainability button
+    $('.sustainability-btn').on('click', function() {
+        showNotification('Más información sobre sostenibilidad próximamente');
+    });
+}
