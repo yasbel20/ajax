@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOLSI - Bolsos de Lujo</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="auth_styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="header-left">
+            <button class="menu-btn" id="menuBtn">
+                <span class="hamburger"></span>
+                <span class="menu-text">Menú</span>
+            </button>
+            <button class="search-btn" id="searchBtn">
+                <svg width="20" height="20" viewBox="0 0 20 20">
+                    <circle cx="8" cy="8" r="6" stroke="currentColor" fill="none" stroke-width="2"/>
+                    <line x1="12.5" y1="12.5" x2="17" y2="17" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                <span>Buscar</span>
+            </button>
+        </div>
+        
+        <div class="logo">
+            <h1>BOLSI</h1>
+        </div>
+        
+        <div class="header-right">
+            <button class="contact-btn" id="contactBtn">Llámanos</button>
+            <button class="wishlist-btn" id="wishlistBtn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" stroke="currentColor" stroke-width="1.5"/>
+                </svg>
+            </button>
+            <button class="account-btn" id="accountBtn">
+                <svg width="24" height="24" viewBox="0 0 24 24">
+                    <circle cx="12" cy="8" r="4" stroke="currentColor" fill="none" stroke-width="1.5"/>
+                    <path d="M4 20c0-4 3.5-7 8-7s8 3 8 7" stroke="currentColor" fill="none" stroke-width="1.5"/>
+                </svg>
+            </button>
+            <button class="cart-btn" id="cartBtn">
+                <svg width="24" height="24" viewBox="0 0 24 24">
+                    <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 8h14l-2-8" stroke="currentColor" fill="none" stroke-width="1.5"/>
+                </svg>
+                <span class="cart-count">0</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Search Modal -->
+    <div class="search-modal" id="searchModal">
+        <div class="search-modal-content">
+            <button class="close-search" id="closeSearch">&times;</button>
+            <h2 class="search-modal-title">¿Qué estás buscando?</h2>
+            <form class="search-form" id="searchForm">
+                <input type="text" id="searchInput" class="search-input" placeholder="" autofocus>
+                <div class="search-buttons">
+                    <button type="submit" class="search-btn-primary">Aceptar</button>
+                    <button type="button" class="search-btn-secondary" id="cancelSearch">Cancelar</button>
+                </div>
+            </form>
+            <div class="search-suggestions">
+                <h3>BÚSQUEDAS FRECUENTES</h3>
+                <div class="suggestion-tags">
+                    <button class="suggestion-tag" data-query="regalos">regalos</button>
+                    <button class="suggestion-tag" data-query="bolso">bolso</button>
+                    <button class="suggestion-tag" data-query="monogram">monogram</button>
+                    <button class="suggestion-tag" data-query="neverfull">neverfull</button>
+                    <button class="suggestion-tag" data-query="pochette">pochette</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="login-modal" id="loginModal">
+        <div class="login-modal-content">
+            <button class="close-login" id="closeLogin">&times;</button>
+            <h2 class="login-modal-title">Identificación</h2>
+            
+            <div class="login-section">
+                <h3 class="login-subtitle">Ya Tengo una Cuenta</h3>
+                <form class="login-form" id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">Email*</label>
+                        <input type="email" id="loginEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Contraseña*</label>
+                        <div class="password-input-wrapper">
+                            <input type="password" id="loginPassword" required>
+                            <button type="button" class="toggle-password">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                    <path d="M12 5C5.636 5 2 12 2 12s3.636 7 10 7 10-7 10-7-3.636-7-10-7z" stroke="currentColor" stroke-width="1.5"/>
+                                    <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-footer">
+                        <a href="#" class="forgot-password">¿Ha olvidado su contraseña?</a>
+                        <p class="form-note">Campos obligatorios*</p>
+                    </div>
+                    <button type="submit" class="login-submit-btn">Iniciar sesión</button>
+                    <p class="alternative-login">O utilice un enlace de acceso único para iniciar sesión: <a href="#">Envíeme el enlace por correo electrónico</a></p>
+                </form>
+            </div>
+
+            <div class="login-divider"></div>
+
+            <div class="register-section">
+                <h3 class="register-subtitle">No tengo cuenta</h3>
+                <p class="register-description">Disfrute de beneficios adicionales creando una cuenta personal</p>
+                <button class="register-btn" id="registerBtn">Crear una cuenta</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Side Menu -->
+    <nav class="side-menu" id="sideMenu">
+        <div class="menu-content">
+            <button class="close-menu" id="closeMenu">&times;</button>
+            <h3 class="menu-title">Colecciones</h3>
+            <ul class="menu-list">
+                <li><a href="#" data-category="todos">Todos los Bolsos</a></li>
+                <li><a href="#" data-category="bandolera">Bolsos Bandolera</a></li>
+                <li><a href="#" data-category="tote">Bolsos Tote</a></li>
+                <li><a href="#" data-category="cartera">Carteras</a></li>
+            </ul>
+            <div class="menu-divider"></div>
+            <h3 class="menu-title">Para Ocasiones</h3>
+            <ul class="menu-list">
+                <li><a href="#" data-occasion="casual">Uso Diario</a></li>
+                <li><a href="#" data-occasion="formal">Eventos Formales</a></li>
+                <li><a href="#" data-occasion="noche">Noche</a></li>
+                <li><a href="#" data-occasion="viaje">Viaje</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section with Background Image -->
+    <section class="hero">
+        <div class="hero-video-container" style="background-image: url('img/portada.jpg');">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <p class="hero-subtitle">REGALOS</p>
+                <h2 class="hero-title">San Valentín</h2>
+                <div class="hero-buttons">
+                    <a href="#products" class="hero-btn primary">Para ella</a>
+                    <a href="#products" class="hero-btn secondary">Para él</a>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <p>Explora una selección de creaciones de</p>
+        </div>
+    </section>
+
+    <!-- Featured Products -->
+    <section class="products-section" id="products">
+        <div class="products-grid" id="productsGrid">
+            <!-- Products loaded via AJAX -->
+        </div>
+        <div class="products-actions">
+            <button class="action-btn outline" id="exploreBtn">Explorar</button>
+            <button class="action-btn filled" id="collectionsBtn">Descubra las colecciones</button>
+        </div>
+    </section>
+
+    <!-- Collections Showcase -->
+    <section class="collections-showcase">
+        <div class="collection-item">
+            <div class="collection-image" style="background-image: url('img/coleccion.jpg');"></div>
+            <div class="collection-info">
+                <h3>Colección Clásica</h3>
+                <p>Elegancia atemporal en piel italiana</p>
+                <a href="#" class="collection-link">Descubrir</a>
+            </div>
+        </div>
+        <div class="collection-item reverse">
+            <div class="collection-info">
+                <h3>Edición Limitada</h3>
+                <p>Diseños exclusivos para esta temporada</p>
+                <a href="#" class="collection-link">Ver más</a>
+            </div>
+            <div class="collection-image" style="background-image: url('img/edicion.jpg');"></div>
+        </div>
+    </section>
+
+    <!-- Featured Banner -->
+    <section class="featured-banner">
+        <div class="banner-content">
+            <div class="banner-image" id="bannerImage" style="background-image: url('img/banner.jpg');"></div>
+            <div class="banner-info">
+                <h3 class="banner-title">Bolsi Signature</h3>
+                <p class="banner-description">El icónico bolso que define la elegancia moderna. Artesanía excepcional en cada detalle.</p>
+                <button class="banner-btn">Descubrir la colección</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Craftsmanship Section -->
+    <section class="craftsmanship-section">
+        <div class="craft-content">
+            <h2 class="section-title">Artesanía Excepcional</h2>
+            <p class="section-subtitle">Cada bolso Bolsi es una obra maestra</p>
+            
+            <div class="craft-grid">
+                <div class="craft-card" data-craft="materials">
+                    <div class="craft-icon">
+                        <div class="icon-shape"></div>
+                    </div>
+                    <h4>Materiales Selectos</h4>
+                    <p>Pieles italianas de la más alta calidad, seleccionadas a mano</p>
+                </div>
+                <div class="craft-card" data-craft="handmade">
+                    <div class="craft-icon">
+                        <div class="icon-shape"></div>
+                    </div>
+                    <h4>Hecho a Mano</h4>
+                    <p>Artesanos expertos con décadas de experiencia</p>
+                </div>
+                <div class="craft-card" data-craft="design">
+                    <div class="craft-icon">
+                        <div class="icon-shape"></div>
+                    </div>
+                    <h4>Diseño Exclusivo</h4>
+                    <p>Creaciones únicas que marcan tendencia</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sustainability Section -->
+    <section class="sustainability-section">
+        <div class="sustainability-content">
+            <div class="sustainability-text">
+                <h2>Compromiso con el Futuro</h2>
+                <p>En Bolsi, la sostenibilidad es parte integral de nuestra filosofía. Utilizamos materiales éticos y procesos responsables para crear bolsos que duran generaciones.</p>
+                <ul class="sustainability-list">
+                    <li>Pieles certificadas y de origen ético</li>
+                    <li>Procesos de producción sostenibles</li>
+                    <li>Programa de reciclaje de bolsos</li>
+                    <li>Empaques 100% reciclables</li>
+                </ul>
+                <button class="sustainability-btn">Conoce más</button>
+            </div>
+            <div class="sustainability-image" style="background-image: url('img/out.jpg');"></div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="newsletter">
+        <div class="newsletter-content">
+            <h3>Mantente Conectado</h3>
+            <p>Suscríbete para recibir novedades exclusivas y ofertas especiales</p>
+            <form id="newsletterForm" class="newsletter-form">
+                <input type="email" id="emailInput" placeholder="Tu correo electrónico" required>
+                <button type="submit" class="submit-btn">Suscribirse</button>
+            </form>
+            <div id="newsletterMessage" class="newsletter-message"></div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Atención al Cliente</h4>
+                <ul>
+                    <li><a href="#">Contacto</a></li>
+                    <li><a href="#">Preguntas Frecuentes</a></li>
+                    <li><a href="#">Envíos y Devoluciones</a></li>
+                    <li><a href="#">Guía de Tallas</a></li>
+                    <li><a href="#">Cuidado del Producto</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Sobre Bolsi</h4>
+                <ul>
+                    <li><a href="#">Nuestra Historia</a></li>
+                    <li><a href="#">Artesanía</a></li>
+                    <li><a href="#">Sostenibilidad</a></li>
+                    <li><a href="#">Carreras</a></li>
+                    <li><a href="#">Prensa</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Servicios</h4>
+                <ul>
+                    <li><a href="#">Personalización</a></li>
+                    <li><a href="#">Reparación</a></li>
+                    <li><a href="#">Programa de Fidelidad</a></li>
+                    <li><a href="#">Gift Card</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Síguenos</h4>
+                <div class="social-links">
+                    <a href="#" aria-label="Instagram">IG</a>
+                    <a href="#" aria-label="Facebook">FB</a>
+                    <a href="#" aria-label="Pinterest">PI</a>
+                    <a href="#" aria-label="YouTube">YT</a>
+                </div>
+                <div class="newsletter-footer">
+                    <p>Suscríbete a nuestro newsletter</p>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Bolsi. Todos los derechos reservados.</p>
+            <div class="footer-legal">
+                <a href="#">Privacidad</a>
+                <a href="#">Términos y Condiciones</a>
+                <a href="#">Cookies</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Side Cart -->
+    <div class="side-cart" id="sideCart">
+        <div class="side-cart-content">
+            <div class="side-cart-header">
+                <h3>Cesta de Compra</h3>
+                <button class="close-cart" id="closeCart">&times;</button>
+            </div>
+            
+            <div class="side-cart-body" id="cartItems">
+                <div class="empty-cart" id="emptyCart">
+                    <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 8h14l-2-8" stroke-width="1.5"/>
+                    </svg>
+                    <p>Tu cesta está vacía</p>
+                </div>
+                
+                <!-- Cart items will be added here dynamically -->
+            </div>
+            
+            <div class="side-cart-footer" id="cartFooter" style="display: none;">
+                <div class="cart-total">
+                    <span>Subtotal</span>
+                    <span class="total-amount" id="totalAmount">€0.00</span>
+                </div>
+                <button class="checkout-btn" id="checkoutBtn">Compre Ya</button>
+                <button class="continue-shopping-btn" id="continueShoppingBtn">Continuar Comprando</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="script_auth.js"></script>
+</body>
+</html>
